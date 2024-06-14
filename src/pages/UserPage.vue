@@ -1,11 +1,16 @@
 <template>
-    <section class="user">
+    <modalWindow />
+    <section v-if="this.loading == false" class="user">
         <div class="first-info">
             <img v-if="!!user.avatar" :src="user.avatar" alt="avatar" class='image-user' />
             <img v-else src="../assets/NoUser.png" alt="avatar" class='image-user' />
             <div class="info-nameRating">
                 <p class="name">{{ user.name }}</p>
                 <p class="rating">рэйтинг: {{ user.rating }}</p>
+                <data v-if="user.id === myUser.id" class="buttons">
+                    <button class="edit">Редактировать профиль</button>
+                    <button class="delete" @click.prevent="this.userRemove">Удалить профиль</button>
+                </data>
             </div>
         </div>
         <div class="second-info">
@@ -17,11 +22,25 @@
             </div>
         </div>
     </section>
+    <loaderMain v-else />
 </template>
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import loaderMain from '../components/loading/loaderMain.vue';
+import modalWindow from '../components/ModalWindow.vue';
+
     export default {
+        components: {
+            loaderMain,
+            modalWindow,
+        },
+        data() {
+            return {
+                loading: true,
+                modalWindow: false,
+            }
+        },
         props: {
             id: {
                 type: String,
@@ -29,14 +48,32 @@ import { mapActions, mapState } from 'vuex';
             },
         },
         async mounted() {
-            await this.$store.dispatch('loadUser', this.id)
+            await this.$store.dispatch('loadUser', this.id);
+            this.loading = false
         },
         methods: {
             ...mapActions(['loadUser']),
+            ...mapActions(['deleteUser']),
+            async userRemove() {
+                if(this.user.id === this.myUser.id) {
+                    this.modalWindow = !this.modalWindow;
+                    await this.$store.dispatch('deleteUser', this.id);
+                    this.$router.push('/main');
+                }
+            },
+
         },
         computed: {
             ...mapState({user: state => state.user.user}),
+            ...mapState({myUser: state => state.userAuth.user}),
         },
+        watch: { 
+            id: async function(newVal) {
+                this.loading = true;
+                await this.$store.dispatch('loadUser', newVal);
+                this.loading = false;
+            },
+      }
     }
 </script>
 
@@ -117,5 +154,32 @@ import { mapActions, mapState } from 'vuex';
         height: 150px;
         border: 1px solid black;
         display: flex;
+    }
+    .buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        height: 30px;
+        border: 1px solid black;
+        background: #34C924;
+        border-radius: 20px;
+        color: #fff;
+    }
+    .delete {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 200px;
+        height: 30px;
+        border: 1px solid black;
+        background-color: #B00000;
+        border-radius: 20px;
+        color: #fff;
     }
 </style>

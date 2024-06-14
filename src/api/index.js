@@ -1,5 +1,5 @@
-import api, { setToken } from './api'
+import api, { setToken, removeToken } from './api'
 
-export { api, setToken }
+export { api, setToken, removeToken  }
 
 

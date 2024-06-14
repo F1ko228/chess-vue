@@ -101,7 +101,6 @@
                     try {
                         await this.$store.dispatch('auth', { name: this.form.username, password: this.form.password });
                         await this.$router.push("/main");
-                        window.location.reload();
                     } catch(error) {
                         console.log('Ошибка авторизации', error);
                         this.inputIncorrect = true;

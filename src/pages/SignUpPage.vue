@@ -104,8 +104,7 @@
                 }
                 else {
                     this.$store.dispatch('signUp', { name: this.form.username, email: this.form.email, password: this.form.password });
-                    this.$router.push("/main");
-                    // window.location.reload();
+                    this.$router.push("/main"); 
                     return;
                 }
                 

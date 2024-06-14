@@ -14,5 +14,9 @@ export function setToken(token) {
     axios.defaults.headers['authorization'] = `Bearer ${token}`
 }
 
+export function removeToken() {
+    axios.defaults.headers['authorization'] = undefined;
+}
+
 export default axios;
 

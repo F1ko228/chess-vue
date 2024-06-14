@@ -1,4 +1,4 @@
-import { api, setToken } from '../api'
+import { api, setToken, removeToken } from '../api'
 
 const userAuth = {
     state() {
@@ -9,6 +9,8 @@ const userAuth = {
                 email: '', 
                 name: '',
                 id: '', 
+                rating: '',
+                avatar: '',
             },
         }
     },
@@ -17,8 +19,13 @@ const userAuth = {
             state.token = token;
         },
         setUser(state, user) {
-            state.user = user;
+            state.user.name = user.name; 
+            state.user.email = user.email; 
+            state.user.id = user.id; 
             state.auth = true;
+        },
+        removeUser(state) {
+            state.auth = false;
         }
     },
     actions: {
@@ -28,7 +35,7 @@ const userAuth = {
                         name,
                         password,
                 });
-                const user = response.data.data.name
+                const user = response.data.data
                 const token = response.data.token
                 commit('setUser', user)
                 commit('setToken', token)
@@ -47,7 +54,7 @@ const userAuth = {
                         password,
                 });
                 console.log(response)
-                const user = response.data.data.name
+                const user = response.data.data
                 const token = response.data.token
                 commit('setUser', user)
                 commit('setToken', token)
@@ -70,24 +77,32 @@ const userAuth = {
         }, 
         async logOut({ commit }) {
             try {
-                const user = {
-                    email: '', 
-                    name: '',
-                    id: '', 
-                };
-                commit('setUser', user);
+                commit('removeUser');
                 localStorage.removeItem('token');
+                removeToken()
             } catch(error) {
                 console.log(error)
             }
         },
-        // async deleteUser({ commit }, name) {
-            //         //     try {
-                        
-            //         //     } catch(error) {
-            //         //         console.log(error)
-            //         //     }
-            //         // }
+        async deleteUser({ commit }, id) {
+            try {
+                let user = {
+                    id: '',
+                    name: '',
+                    rating: '',
+                    email: '',
+                    avatar: '',
+                };
+                let response = await api.delete(`/users/${id}`);
+                commit('setUser', user);
+                commit('removeUser');
+                console.log(response);
+                localStorage.removeItem('token');
+                removeToken();
+            } catch(error) {
+                console.log(error)
+            }
+        },
     }
 }
 
