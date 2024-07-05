@@ -34,7 +34,11 @@ export default {
   },
   async mounted() {
     console.log(this.$store)
-    await this.$store.dispatch('loadLeaderBoard')
+    try {
+      await this.$store.dispatch('loadLeaderBoard');
+    } catch(error) {
+      console.log(error);
+    }
   },
   data() {
     return {

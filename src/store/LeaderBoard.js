@@ -15,7 +15,8 @@ const store = {
         async loadLeaderBoard({commit}) {
             try {
                 const response = await api.get('/users?sortBy=-rating');
-                const listOfUsers = response.data.slice(0, 10);
+            //  Сделал slice, так как в api не работает пагинация
+                const listOfUsers = response.data.slice(0, 10); 
                 commit('populate', listOfUsers);
             } catch(error) {
                 console.log(error);
@@ -24,4 +25,4 @@ const store = {
     },
 }
 
-export { store as leadersStore}
+export { store as leadersStore }

@@ -1,5 +1,15 @@
 <template>
-    <modalWindow />
+    <modalWindow v-if="window">
+        <template v-slot:content>
+            <div class="content-window">
+                <p class="content-window__title">Вы уверены в том, что хотите удалить ваш профиль ?</p>
+                <div class="content-window__buttons">
+                    <button class="button agree" @click.prevent="this.userRemove">Удалить</button>
+                    <button class="button back" @click.prevent="closeWindow">Я передумал</button>
+                </div>
+            </div>
+        </template>
+    </modalWindow>
     <section v-if="this.loading == false" class="user">
         <div class="first-info">
             <img v-if="!!user.avatar" :src="user.avatar" alt="avatar" class='image-user' />
@@ -9,7 +19,7 @@
                 <p class="rating">рэйтинг: {{ user.rating }}</p>
                 <data v-if="user.id === myUser.id" class="buttons">
                     <button class="edit">Редактировать профиль</button>
-                    <button class="delete" @click.prevent="this.userRemove">Удалить профиль</button>
+                    <button class="delete" @click.prevent="this.agreeWindow">Удалить профиль</button>
                 </data>
             </div>
         </div>
@@ -38,7 +48,6 @@ import modalWindow from '../components/ModalWindow.vue';
         data() {
             return {
                 loading: true,
-                modalWindow: false,
             }
         },
         props: {
@@ -54,18 +63,26 @@ import modalWindow from '../components/ModalWindow.vue';
         methods: {
             ...mapActions(['loadUser']),
             ...mapActions(['deleteUser']),
-            async userRemove() {
+            ...mapActions(['openWindow']),
+            ...mapActions(['closeWindow']),
+            async agreeWindow() {
                 if(this.user.id === this.myUser.id) {
-                    this.modalWindow = !this.modalWindow;
-                    await this.$store.dispatch('deleteUser', this.id);
-                    this.$router.push('/main');
+                    await this.$store.dispatch('openWindow');
                 }
+                else {
+                    console.log('error')
+                }
+            },
+            async userRemove() {
+                await this.$store.dispatch('deleteUser', this.id);
+                this.$router.push('/main');
             },
 
         },
         computed: {
             ...mapState({user: state => state.user.user}),
             ...mapState({myUser: state => state.userAuth.user}),
+            ...mapState({window: state => state.modalWindow.open})
         },
         watch: { 
             id: async function(newVal) {
@@ -167,7 +184,7 @@ import modalWindow from '../components/ModalWindow.vue';
         width: 200px;
         height: 30px;
         border: 1px solid black;
-        background: #34C924;
+        background: #ffa500;
         border-radius: 20px;
         color: #fff;
     }
@@ -181,5 +198,85 @@ import modalWindow from '../components/ModalWindow.vue';
         background-color: #B00000;
         border-radius: 20px;
         color: #fff;
+        transition: all .4s;
+    }
+    .delete:hover {
+        background-color: #B90000;
+    }
+    .content-window {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 50px;
+        align-items: center;
+    }
+    .content-window__title { 
+        font-size: 21px;
+        font-weight: 400;
+    }
+    .content-window__buttons {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 250px;
+        height: 60px;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all .3s;
+        position: relative;
+        border: none;
+        color: #fff;
+        z-index: 200;
+    }
+    .button::before {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        height: 0;
+        z-index: 2;
+        transition: .3s;
+    }
+    .button::after {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        z-index: 1;
+        transition: .3s;
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
+        opacity: 0;
+        transform: scale(0.1, 1);
+    }
+    .button:hover::before {
+        opacity: 0;
+    }
+    .button.agree:hover {
+        letter-spacing: 1.1px;
+        transform: scale(1, 1); 
+        background-color: rgb(255, 0, 0, 0.6);
+    }
+    .button.back:hover {
+        letter-spacing: 1.1px;
+        transform: scale(1, 1); 
+        background-color: rgb(0, 200, 0, 0.6);
+    }
+    .button:hover::after {
+        opacity: 1;
+        transform: scale(1, 1); 
+    }
+    .button.agree {
+        background-color: rgb(255, 0, 0, 0.7);
+    }
+    .button.back {
+        background-color: rgb(0, 200, 0, 0.7);
     }
 </style>

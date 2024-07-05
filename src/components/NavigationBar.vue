@@ -39,6 +39,7 @@
             ...mapActions(['logOut']),
             unauthorization() {
                 this.$store.dispatch('logOut');
+                this.$router.push('/main');
             },
         },
     } 

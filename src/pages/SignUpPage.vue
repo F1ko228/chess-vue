@@ -12,6 +12,7 @@
             <FormSignInvalid v-else-if="(v$.form.repeatPassword.$dirty && v$.form.repeatPassword.required.$invalid)" text="Поле Repeat password обязательно" />
             <FormSignInvalid v-else-if="(v$.form.repeatPassword.minLength&& v$.$errors.length >= 1 )" text="Мало символов в Repeat password" />
             <FormSignInvalid v-else-if="( this.compPassword == true && v$.form.password.$dirty && v$.form.repeatPassword.$dirty )" text="Пароли не совпадают" />
+            <FormSignInvalid v-else-if="( this.inputIncorrect )" text="Логин или почта некорректны" />
             <FormSignInvalid v-else-if="( this.inputRequired == true )" text="Все поля обязательны для заполнения" />
             <div class="form-input form-input__email" :class="{ error: v$.form.email.email.$invalid }">
                 <p class="form-input__icon-wrapper"><svg width="20px" height="20px" viewBox="0 0 512 512"><path fill="#ffffff" d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4L236.8 313.6c11.4 8.5 27 8.5 38.4 0L492.8 150.4c12.1-9.1 19.2-23.3 19.2-38.4c0-26.5-21.5-48-48-48H48zM0 176V384c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V176L294.4 339.2c-22.8 17.1-54 17.1-76.8 0L0 176z"/></svg></p>
@@ -63,6 +64,7 @@
                 lock: false,
                 compPassword: false,
                 inputRequired: false,
+                inputIncorrect: false,
             }
         },
         validations () {
@@ -93,7 +95,7 @@
                 this.v$.form.$touch
                 this.comparePasswords()
                 if(this.form.email == "" || this.form.username == "" || this.form.password == "" || this.form.repeatPassword == "") {
-                    this.inputRequired = true
+                    this.inputRequired = true;
                     return;
                 }
                 else if(this.v$.$error) {
@@ -103,9 +105,18 @@
                     return;
                 }
                 else {
-                    this.$store.dispatch('signUp', { name: this.form.username, email: this.form.email, password: this.form.password });
-                    this.$router.push("/main"); 
-                    return;
+                    // this.$store.dispatch('signUp', { name: this.form.username, email: this.form.email, password: this.form.password });
+                    // this.$router.push("/main"); 
+                    // return;
+                    try {
+                        this.$store.dispatch('signUp', { name: this.form.username, email: this.form.email, password: this.form.password });
+                        this.$router.push("/main"); 
+                        return;
+                    } catch(error) {
+                        console.log(error);
+                        this.inputIncorrect = true;
+                        return;
+                    }
                 }
                 
             },

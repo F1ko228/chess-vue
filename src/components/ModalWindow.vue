@@ -1,9 +1,9 @@
 <template>
     <div class="window">
         <div class="modal">
-            <p class='close' @click.prevent="this.onClose"><img src="../assets/cross.svg" alt="close"></p>
+            <p class='close' @click="this.close"><img src="../assets/cross.svg" alt="close"></p>
             <div>
-                <slot>
+                <slot name="content">
 
                 </slot>
             </div>
@@ -12,23 +12,14 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
     export default {
-        data() {
-            return {
-                show: false,
-            }
-        },
         methods: {
-            onClose() {
-                this.show = !this.show;
+            ...mapActions(['closeWindow']),
+            async close() {
+                await this.$store.dispatch('closeWindow');
             },
-            keyOnClose() {
-                window.addEventListener('keydown', function(e) {
-                    if(e.key === 'Escape') {
-                        this.show = !this.show;
-                    }
-                })
-            }
         },
     }
 </script>
@@ -44,13 +35,14 @@
     }
     .modal {
         background-color: #fefefe;
+        border-radius: 15px;
         margin: 15px auto;
-        border: 1px solid bisque;
+        border: 3px solid bisque;
         width: 40%;
         height: 30%;
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 30px;
         align-items: center;
     }
     .close {
@@ -59,6 +51,7 @@
         border-radius: 50%;
         align-self: flex-end;
         margin-right: 15px;
-        margin-top: 5px;
-}
+        margin-top: 5px;   
+        cursor: pointer;   
+    }
 </style>

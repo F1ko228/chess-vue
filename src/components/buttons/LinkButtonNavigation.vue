@@ -39,7 +39,7 @@
         transition: all 50ms ease;
     }
 
-    .link-button:before {
+    .link-button::before {
         position: absolute; 
         content: ' ';
         top: 0;

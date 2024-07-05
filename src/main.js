@@ -9,6 +9,8 @@ import { leadersStore } from './store/LeaderBoard'
 import { userPageStore } from './store/UserPage'
 import { userAuth } from './store/Auth'
 import { createStore } from 'vuex';
+import { modalWindow } from './store/modalWindow';
+import ErrorPage from './pages/ErrorPage.vue'
 
 const app = createApp(App)
 const routes = [
@@ -16,6 +18,7 @@ const routes = [
     { path: '/login', name: 'Login', component: LoginPage },
     { path: '/signup', component: SignUpPage },
     { path: '/profile/:id', component: UserPage, props: true, meta: { authRequired: true }},
+    { path: '/pathMatch(.*)*', component: ErrorPage },
 ]
 
 const router = createRouter({
@@ -42,6 +45,7 @@ const store = createStore({
 store.registerModule('leaders', leadersStore)
 store.registerModule('user', userPageStore)
 store.registerModule('userAuth', userAuth)
+store.registerModule('modalWindow', modalWindow)
 
 
 app.use(router)
