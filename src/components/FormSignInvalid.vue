@@ -1,6 +1,6 @@
 <template>
     <div class="invalid">
-        <p class="text-invalid">{{ text }}</p>
+        <h1 class="text-invalid">{{ text }}</h1>
     </div>
 </template>
 

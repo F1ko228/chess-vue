@@ -24,7 +24,7 @@ const userPageStore = {
                 const user = response.data;
                 commit('addUser', user)     
             } catch(error) {
-                console.log(error);
+                throw new Error(error);
             }
         },
     }

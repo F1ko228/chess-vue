@@ -2,8 +2,7 @@ import axios from 'axios'
 
 axios.interceptors.response.use(function(response) {
     if(response.status === 401 || response.status === 403) {
-        localStorage.removeItem('token')
-        this.$router.push('/login');
+        localStorage.removeItem('token');
     }
     return response;
 })

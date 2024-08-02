@@ -1,6 +1,6 @@
 <template>
     <div class="sign-page">
-        <h2 class="sign-page__title">Chess</h2>
+        <h1 class="sign-page__title">Chess</h1>
         <form class="sign-page__form" action="" @submit.prevent="checkform" novalidate>
             <FormSignInvalid v-if="(v$.form.email.email.$invalid && v$.form.email.$dirty)" text="Не валидная почта" />
             <FormSignInvalid v-else-if="(v$.form.email.$dirty && v$.form.email.required.$invalid)" text="Поле email обязательно" />

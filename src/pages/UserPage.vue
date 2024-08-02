@@ -15,12 +15,12 @@
             <img v-if="!!user.avatar" :src="user.avatar" alt="avatar" class='image-user' />
             <img v-else src="../assets/NoUser.png" alt="avatar" class='image-user' />
             <div class="info-nameRating">
-                <p class="name">{{ user.name }}</p>
+                <h1 class="name">{{ user.name }}</h1>
                 <p class="rating">рэйтинг: {{ user.rating }}</p>
-                <data v-if="user.id === myUser.id" class="buttons">
-                    <button class="edit">Редактировать профиль</button>
+                <p v-if="user.id === myUser.id" class="buttons">
+                    <button class="edit" @click.prevent = "this.$router.push('/edit')">Редактировать профиль</button>
                     <button class="delete" @click.prevent="this.agreeWindow">Удалить профиль</button>
-                </data>
+                </p>
             </div>
         </div>
         <div class="second-info">
@@ -57,8 +57,12 @@ import modalWindow from '../components/ModalWindow.vue';
             },
         },
         async mounted() {
-            await this.$store.dispatch('loadUser', this.id);
-            this.loading = false
+            try {
+                await this.$store.dispatch('loadUser', this.id);
+                this.loading = false;
+            } catch(error) {
+                this.$router.push('/404');
+            }
         },
         methods: {
             ...mapActions(['loadUser']),
@@ -70,7 +74,7 @@ import modalWindow from '../components/ModalWindow.vue';
                     await this.$store.dispatch('openWindow');
                 }
                 else {
-                    console.log('error')
+                    console.log('error');
                 }
             },
             async userRemove() {
@@ -82,7 +86,7 @@ import modalWindow from '../components/ModalWindow.vue';
         computed: {
             ...mapState({user: state => state.user.user}),
             ...mapState({myUser: state => state.userAuth.user}),
-            ...mapState({window: state => state.modalWindow.open})
+            ...mapState({window: state => state.modalWindow.open}),
         },
         watch: { 
             id: async function(newVal) {
@@ -184,9 +188,13 @@ import modalWindow from '../components/ModalWindow.vue';
         width: 200px;
         height: 30px;
         border: 1px solid black;
-        background: #ffa500;
+        background: #a5e8a9;
         border-radius: 20px;
         color: #fff;
+        transition: all .4s;
+    }
+    .edit:hover {
+        background: #7bc37f;
     }
     .delete {
         display: flex;

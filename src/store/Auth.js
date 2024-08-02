@@ -41,7 +41,6 @@ const userAuth = {
                 commit('setToken', token)
                 localStorage.setItem('token', token)
                 setToken(token)
-                console.log(user)
             } catch(error) {
                 throw new Error(error);
             }
@@ -67,9 +66,7 @@ const userAuth = {
         async getMe({ commit }) {
             try{
                 let response = await api.get('/auth_me');
-                console.log(response)
                 const user = response.data;
-                console.log(user)
                 commit('setUser', user);
             } catch(error) {
                 console.log(error)

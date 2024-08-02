@@ -1,26 +1,26 @@
 <template>
-  <div class="main-page">
+  <section class="main-page">
     <div class="main-page__play">
-      <div class="play__elem">
+      <p class="play__elem">
         сыграть онлайн
-      </div>
-      <div class="play__elem">
+      </p>
+      <p class="play__elem">
         сыграть локально
-      </div>
-      <div class="play__elem">
+      </p>
+      <p class="play__elem">
         сыграть с компьютером
-      </div>
+      </p>
     </div>
     <div class="main-page__players">
-      <h3 class="players-title">
+      <h1 class="players-title">
         Топ 10 игроков ресурса
-      </h3>
+      </h1>
       <div class="players-block">
           <loaderMain v-if="leaders.length == 0" />
-          <TopUsers v-for="user in leaders" :key="user.id" :name="user.name" :rating="user.rating" v-on:click="this.$router.push(`/profile/${user.id}`)" />
+          <TopUsers v-for="user in leaders" :key="user.id" :name="user.name" :rating="user.rating" @click="this.$router.push(`/profile/${user.id}`)" />
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -33,7 +33,6 @@ export default {
     loaderMain,
   },
   async mounted() {
-    console.log(this.$store)
     try {
       await this.$store.dispatch('loadLeaderBoard');
     } catch(error) {
@@ -109,6 +108,7 @@ export default {
 .players-title {
   text-transform: uppercase;
   color: #404040;
+  font-size: 20px;
 }
 
 .players-block {

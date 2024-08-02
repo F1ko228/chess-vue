@@ -1,6 +1,6 @@
 <template>
     <div class="login-page">
-        <h2 class="login-page__title">Chess</h2>
+        <h1 class="login-page__title">Chess</h1>
         <form class="login-page__form" action="" @submit.prevent="checkform" novalidate>
             <FormSignInvalid v-if="(v$.$errors.length >= 1 && v$.form.username.minLength.$invalid)" text="Мало символов в username" />
             <FormSignInvalid v-else-if="(v$.$errors.length >= 1 && v$.form.username.maxLength.$invalid)" text="Много символов в username" />

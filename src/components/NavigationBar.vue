@@ -1,6 +1,6 @@
 <template>
     <nav class="nav">
-        <p><router-link class="nav__logo" to="/main">chess</router-link></p>
+        <h1><router-link class="nav__logo" to="/main">chess</router-link></h1>
         <div class="nav__elems">
             <div class="elem elem-play">
                 <p class="dropcontent">играть</p>
